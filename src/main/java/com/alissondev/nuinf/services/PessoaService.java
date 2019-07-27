@@ -65,4 +65,10 @@ public class PessoaService {
 		
 		return telefoneRepository.save(telefone);
 	}
+	
+	public List<Telefone> listarTelefones(Long telefoneId) {
+		Pessoa pessoa = findById(telefoneId).get();
+		
+		return pessoa.getTelefones();
+	}
 }

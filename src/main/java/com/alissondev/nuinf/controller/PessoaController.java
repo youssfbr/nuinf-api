@@ -73,4 +73,11 @@ public class PessoaController {
 		
 		return ResponseEntity.created(uri).build();
 	}
+	
+	@GetMapping("/{id}/telefones")
+	public ResponseEntity<List<Telefone>> listarTelefones(@PathVariable("id") Long PessoaId) {
+		List<Telefone> telefones = pessoaService.listarTelefones(PessoaId);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(telefones);
+	}
 }

@@ -29,8 +29,8 @@ public class PessoaController {
 	private PessoaRepository pessoas;
 	
 	@GetMapping	
-	public List<Pessoa> findAll() {		
-		return pessoas.findAll();		
+	public ResponseEntity<List<Pessoa>> findAll() {		
+		return ResponseEntity.status(HttpStatus.OK).body(pessoas.findAll());		
 	}
 	
 	@GetMapping("/{id}")

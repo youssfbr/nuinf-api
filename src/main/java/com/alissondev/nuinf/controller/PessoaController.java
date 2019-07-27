@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.alissondev.nuinf.entities.Pessoa;
+import com.alissondev.nuinf.entities.Telefone;
 import com.alissondev.nuinf.services.PessoaService;
 
 @RestController
@@ -33,7 +34,7 @@ public class PessoaController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Pessoa> findByID(@PathVariable Long id) {
+	public ResponseEntity<Pessoa> findByID(@PathVariable("id") Long id) {
 		Optional<Pessoa> pessoa = pessoaService.findById(id);				
 		return ResponseEntity.ok(pessoa.get());
 	}
@@ -55,11 +56,21 @@ public class PessoaController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> atualizar(@RequestBody Pessoa pessoa, @PathVariable Long id) {
+	public ResponseEntity<Void> atualizar(@RequestBody Pessoa pessoa, @PathVariable("id") Long id) {
 		
 		pessoa.setId(id); // Garante que o que está está sendo atualizado é o que está vindo na URI.
 		pessoaService.update(pessoa);		
 		
 		return ResponseEntity.noContent().build();
+	}
+	
+	@PostMapping("/{id}/telefones")	
+	public ResponseEntity<Void> adicionarTelefone(@PathVariable("id") Long pessoaId, @RequestBody Telefone telefone) {
+		
+		pessoaService.salvarTelefone(pessoaId, telefone);
+		
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().build().toUri();
+		
+		return ResponseEntity.created(uri).build();
 	}
 }

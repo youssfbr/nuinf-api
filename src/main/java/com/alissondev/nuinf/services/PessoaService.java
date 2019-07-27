@@ -8,7 +8,9 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.alissondev.nuinf.entities.Pessoa;
+import com.alissondev.nuinf.entities.Telefone;
 import com.alissondev.nuinf.repository.PessoaRepository;
+import com.alissondev.nuinf.repository.TelefoneRepository;
 import com.alissondev.nuinf.services.exceptions.PessoaNaoEncontradaException;
 
 @Service
@@ -16,6 +18,9 @@ public class PessoaService {
 
 	@Autowired
 	private PessoaRepository pessoasRepository;
+	
+	@Autowired
+	private TelefoneRepository telefoneRepository;
 	
 	public List<Pessoa> findAll() {
 		return pessoasRepository.findAll();
@@ -51,5 +56,13 @@ public class PessoaService {
 	
 	private void verificarExistencia(Pessoa pessoa) {
 		findById(pessoa.getId());
+	}
+	
+	public Telefone salvarTelefone(Long PessoaId, Telefone telefone) {
+		Pessoa pessoa = findById(PessoaId).get();
+		
+		telefone.setPessoa(pessoa);
+		
+		return telefoneRepository.save(telefone);
 	}
 }

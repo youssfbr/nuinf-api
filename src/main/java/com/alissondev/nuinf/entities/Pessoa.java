@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -29,7 +29,7 @@ public class Pessoa {
 	
 	private String email;
 	
-	@Transient
+	@OneToMany(mappedBy = "pessoa")
 	private List<Telefone> telefones;
 	
 	public Long getId() {

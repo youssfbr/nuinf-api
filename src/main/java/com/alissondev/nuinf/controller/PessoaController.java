@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,33 +18,37 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.alissondev.nuinf.entities.Pessoa;
-import com.alissondev.nuinf.repository.PessoaRepository;
+import com.alissondev.nuinf.services.PessoaService;
+import com.alissondev.nuinf.services.exceptions.PessoaNaoEncontradaException;
 
 @RestController
 @RequestMapping("nuinf/pessoas")
 public class PessoaController {
 
 	@Autowired
-	private PessoaRepository pessoas;
+	private PessoaService pessoaService;
 	
 	@GetMapping	
 	public ResponseEntity<List<Pessoa>> findAll() {		
-		return ResponseEntity.status(HttpStatus.OK).body(pessoas.findAll());		
+		return ResponseEntity.status(HttpStatus.OK).body(pessoaService.findAll());		
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Pessoa> findByID(@PathVariable Long id) {
-		Optional<Pessoa> pessoa = pessoas.findById(id);
-		
-		if (pessoa.isEmpty()) {
+		Optional<Pessoa> pessoa;
+		try {
+			pessoa = pessoaService.findById(id);
+		} 
+		catch (PessoaNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
+				
 		return ResponseEntity.ok(pessoa.get());
 	}
 	
 	@PostMapping	
 	public ResponseEntity<Void> save(@RequestBody Pessoa pessoa) {
-		pessoa = pessoas.save(pessoa);
+		pessoa = pessoaService.save(pessoa);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(pessoa.getId()).toUri();
@@ -56,9 +59,9 @@ public class PessoaController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id) {		
 		try {
-			pessoas.deleteById(id);	
+			pessoaService.deleteById(id);	
 		} 
-		catch (EmptyResultDataAccessException e) {
+		catch (PessoaNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.noContent().build();
@@ -66,8 +69,15 @@ public class PessoaController {
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<Void> atualizar(@RequestBody Pessoa pessoa, @PathVariable Long id) {
-		pessoa.setId(id);
-		pessoas.save(pessoa);
+		
+		pessoa.setId(id); // Garante que o que está está sendo atualizado é o que está vindo na URI.
+		
+		try {
+			pessoaService.update(pessoa);
+		} 
+		catch (PessoaNaoEncontradaException e) {
+			return ResponseEntity.notFound().build();
+		}		
 		
 		return ResponseEntity.noContent().build();
 	}

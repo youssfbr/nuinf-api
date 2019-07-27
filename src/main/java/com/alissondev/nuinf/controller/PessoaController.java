@@ -65,8 +65,10 @@ public class PessoaController {
 	}
 	
 	@PutMapping("/{id}")
-	public void atualizar(@RequestBody Pessoa pessoa, @PathVariable Long id) {
+	public ResponseEntity<Void> atualizar(@RequestBody Pessoa pessoa, @PathVariable Long id) {
 		pessoa.setId(id);
 		pessoas.save(pessoa);
+		
+		return ResponseEntity.noContent().build();
 	}
 }

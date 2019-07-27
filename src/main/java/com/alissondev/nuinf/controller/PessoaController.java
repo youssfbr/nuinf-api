@@ -19,7 +19,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.alissondev.nuinf.entities.Pessoa;
 import com.alissondev.nuinf.services.PessoaService;
-import com.alissondev.nuinf.services.exceptions.PessoaNaoEncontradaException;
 
 @RestController
 @RequestMapping("nuinf/pessoas")
@@ -35,14 +34,7 @@ public class PessoaController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Pessoa> findByID(@PathVariable Long id) {
-		Optional<Pessoa> pessoa;
-		try {
-			pessoa = pessoaService.findById(id);
-		} 
-		catch (PessoaNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}
-				
+		Optional<Pessoa> pessoa = pessoaService.findById(id);				
 		return ResponseEntity.ok(pessoa.get());
 	}
 	
@@ -58,12 +50,7 @@ public class PessoaController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id) {		
-		try {
-			pessoaService.deleteById(id);	
-		} 
-		catch (PessoaNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}
+		pessoaService.deleteById(id);
 		return ResponseEntity.noContent().build();
 	}
 	
@@ -71,13 +58,7 @@ public class PessoaController {
 	public ResponseEntity<Void> atualizar(@RequestBody Pessoa pessoa, @PathVariable Long id) {
 		
 		pessoa.setId(id); // Garante que o que está está sendo atualizado é o que está vindo na URI.
-		
-		try {
-			pessoaService.update(pessoa);
-		} 
-		catch (PessoaNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}		
+		pessoaService.update(pessoa);		
 		
 		return ResponseEntity.noContent().build();
 	}

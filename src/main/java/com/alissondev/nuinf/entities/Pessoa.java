@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -25,6 +26,7 @@ public class Pessoa {
 	private String cpf;
 	
 	@Column(name = "data_nascimento")
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataNascimento;
 	
 	private String email;

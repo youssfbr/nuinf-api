@@ -22,25 +22,26 @@ public class PessoaService {
 	@Autowired
 	private TelefoneRepository telefoneRepository;
 	
-	public List<Pessoa> findAll() {
+	public List<Pessoa> listar() {
 		return pessoasRepository.findAll();
 	}
 	
-	public Optional<Pessoa> findById(Long id) {
+	public Optional<Pessoa> buscar(Long id) {
 		Optional<Pessoa> pessoa = pessoasRepository.findById(id);
 		
 		if (pessoa.isEmpty()) {
 			throw new PessoaNaoEncontradaException("Pessoa não encontrada.");
 		}
+		
 		return pessoa;
 	}
 	
-	public Pessoa save(Pessoa pessoa) {
+	public Pessoa salvar(Pessoa pessoa) {
 		pessoa.setId(null);
 		return pessoasRepository.save(pessoa);
 	}
 	
-	public void deleteById(Long id) {
+	public void deletar(Long id) {
 		try {
 			pessoasRepository.deleteById(id);	
 		} 
@@ -49,17 +50,17 @@ public class PessoaService {
 		}		
 	}
 	
-	public void update(Pessoa pessoa) {
+	public void atualizar(Pessoa pessoa) {
 		verificarExistencia(pessoa);
 		pessoasRepository.save(pessoa);
 	}
 	
 	private void verificarExistencia(Pessoa pessoa) {
-		findById(pessoa.getId());
+		buscar(pessoa.getId());
 	}
 	
 	public Telefone salvarTelefone(Long PessoaId, Telefone telefone) {
-		Pessoa pessoa = findById(PessoaId).get();
+		Pessoa pessoa = buscar(PessoaId).get();
 		
 		telefone.setPessoa(pessoa);
 		
@@ -67,7 +68,7 @@ public class PessoaService {
 	}
 	
 	public List<Telefone> listarTelefones(Long telefoneId) {
-		Pessoa pessoa = findById(telefoneId).get();
+		Pessoa pessoa = buscar(telefoneId).get();
 		
 		return pessoa.getTelefones();
 	}

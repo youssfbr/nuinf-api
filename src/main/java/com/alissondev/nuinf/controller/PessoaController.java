@@ -29,19 +29,19 @@ public class PessoaController {
 	private PessoaService pessoaService;
 	
 	@GetMapping	
-	public ResponseEntity<List<Pessoa>> findAll() {		
-		return ResponseEntity.status(HttpStatus.OK).body(pessoaService.findAll());		
+	public ResponseEntity<List<Pessoa>> listar() {		
+		return ResponseEntity.status(HttpStatus.OK).body(pessoaService.listar());		
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Pessoa> findByID(@PathVariable("id") Long id) {
-		Optional<Pessoa> pessoa = pessoaService.findById(id);				
+	public ResponseEntity<Pessoa> buscar(@PathVariable("id") Long id) {
+		Optional<Pessoa> pessoa = pessoaService.buscar(id);				
 		return ResponseEntity.ok(pessoa.get());
 	}
 	
 	@PostMapping	
-	public ResponseEntity<Void> save(@RequestBody Pessoa pessoa) {
-		pessoa = pessoaService.save(pessoa);
+	public ResponseEntity<Void> salvar(@RequestBody Pessoa pessoa) {
+		pessoa = pessoaService.salvar(pessoa);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(pessoa.getId()).toUri();
@@ -51,7 +51,7 @@ public class PessoaController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id) {		
-		pessoaService.deleteById(id);
+		pessoaService.deletar(id);
 		return ResponseEntity.noContent().build();
 	}
 	
@@ -59,13 +59,14 @@ public class PessoaController {
 	public ResponseEntity<Void> atualizar(@RequestBody Pessoa pessoa, @PathVariable("id") Long id) {
 		
 		pessoa.setId(id); // Garante que o que está está sendo atualizado é o que está vindo na URI.
-		pessoaService.update(pessoa);		
+		pessoaService.atualizar(pessoa);		
 		
 		return ResponseEntity.noContent().build();
 	}
 	
+	//Salva telefone
 	@PostMapping("/{id}/telefones")	
-	public ResponseEntity<Void> adicionarTelefone(@PathVariable("id") Long pessoaId, @RequestBody Telefone telefone) {
+	public ResponseEntity<Void> salvarTelefone(@PathVariable("id") Long pessoaId, @RequestBody Telefone telefone) {
 		
 		pessoaService.salvarTelefone(pessoaId, telefone);
 		

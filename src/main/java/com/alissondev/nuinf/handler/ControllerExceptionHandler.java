@@ -11,8 +11,8 @@ import com.alissondev.nuinf.entities.DetalhesErro;
 import com.alissondev.nuinf.services.exceptions.PessoaNaoEncontradaException;
 
 @ControllerAdvice
-public class ControllerExceptionHandler {
-
+public class ControllerExceptionHandler {	
+	
 	@ExceptionHandler(PessoaNaoEncontradaException.class)
 	public ResponseEntity<DetalhesErro> handlePessoaNaoEncontradaException
 					(PessoaNaoEncontradaException e, HttpServletRequest request) {

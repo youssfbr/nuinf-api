@@ -4,6 +4,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,17 +32,19 @@ public class PessoaController {
 	
 	@GetMapping	
 	public ResponseEntity<List<Pessoa>> listar() {		
+		
 		return ResponseEntity.status(HttpStatus.OK).body(pessoaService.listar());		
 	}
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Pessoa> buscar(@PathVariable("id") Long id) {
-		Optional<Pessoa> pessoa = pessoaService.buscar(id);				
+		Optional<Pessoa> pessoa = pessoaService.buscar(id);		
+		
 		return ResponseEntity.ok(pessoa.get());
 	}
 	
 	@PostMapping	
-	public ResponseEntity<Void> salvar(@RequestBody Pessoa pessoa) {
+	public ResponseEntity<Void> salvar(@Valid @RequestBody Pessoa pessoa) {
 		pessoa = pessoaService.salvar(pessoa);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
@@ -52,6 +56,7 @@ public class PessoaController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deleteById(@PathVariable Long id) {		
 		pessoaService.deletar(id);
+		
 		return ResponseEntity.noContent().build();
 	}
 	
@@ -66,7 +71,7 @@ public class PessoaController {
 	
 	//Salva telefone
 	@PostMapping("/{id}/telefones")	
-	public ResponseEntity<Void> salvarTelefone(@PathVariable("id") Long pessoaId, @RequestBody Telefone telefone) {
+	public ResponseEntity<Void> adicionaTelefone(@Valid @PathVariable("id") Long pessoaId, @RequestBody Telefone telefone) {
 		
 		pessoaService.salvarTelefone(pessoaId, telefone);
 		
@@ -75,6 +80,7 @@ public class PessoaController {
 		return ResponseEntity.created(uri).build();
 	}
 	
+	//Lista telefone
 	@GetMapping("/{id}/telefones")
 	public ResponseEntity<List<Telefone>> listarTelefones(@PathVariable("id") Long PessoaId) {
 		List<Telefone> telefones = pessoaService.listarTelefones(PessoaId);

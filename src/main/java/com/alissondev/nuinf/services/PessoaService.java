@@ -59,8 +59,8 @@ public class PessoaService {
 		buscar(pessoa.getId());
 	}
 	
-	public Telefone salvarTelefone(Long PessoaId, Telefone telefone) {
-		Pessoa pessoa = buscar(PessoaId).get();
+	public Telefone salvarTelefone(Long pessoaId, Telefone telefone) {
+		Pessoa pessoa = buscar(pessoaId).get();
 		
 		telefone.setPessoa(pessoa);
 		

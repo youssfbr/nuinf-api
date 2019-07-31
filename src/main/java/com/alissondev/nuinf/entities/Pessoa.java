@@ -9,10 +9,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @JsonInclude(Include.NON_NULL)
@@ -22,16 +27,23 @@ public class Pessoa {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotEmpty(message = "O campo nome não pode ser vazio.")
 	private String nome;
+	
+	@CPF(message = "O CPF é inválido!")
+	@NotEmpty
 	private String cpf;
 	
 	@Column(name = "data_nascimento")
+	@JsonProperty("nascimento")
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private Date dataNascimento;
 	
+	@Email(message = "O endereço de e-mail é inválido.")
 	private String email;
 	
-	@OneToMany(mappedBy = "pessoa")
+	@JsonInclude(Include.NON_EMPTY)
+	@OneToMany(mappedBy = "pessoa") // Relacionamento (1 Pessoa pode ter vários telefones)
 	private List<Telefone> telefones;
 	
 	public Long getId() {

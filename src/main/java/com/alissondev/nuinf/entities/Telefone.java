@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -17,8 +19,12 @@ public class Telefone {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Size(max = 5, message = "Não pode conter mais de 5 caracteres")
+	@NotNull(message = "O código de área não pode ser nulo!")
 	private String ddd;
 	
+	@Size(max = 11, message = "Não pode conter mais de 11 caracteres")
+	@NotNull(message = "O número do telefone não pode ser nulo!")
 	private String numero;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

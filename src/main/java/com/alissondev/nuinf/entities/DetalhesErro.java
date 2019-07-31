@@ -1,5 +1,11 @@
 package com.alissondev.nuinf.entities;
 
+/*
+ * Classe que representa a mensagem de erros das exceções. 
+ * Serve para informar ao usuário, o que de fato aconteceu. (erro)
+ * 
+ * */
+
 public class DetalhesErro {
 
 	private String titulo;

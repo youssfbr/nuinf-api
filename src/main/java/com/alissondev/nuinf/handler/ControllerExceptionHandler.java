@@ -10,6 +10,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import com.alissondev.nuinf.entities.DetalhesErro;
 import com.alissondev.nuinf.services.exceptions.PessoaNaoEncontradaException;
 
+/*
+ * Esta classe é responsável por interceptar e tratar todas as exceções, diminuindo o uso
+ * dos Try catch que poluem com muito código, além deste método poder enviar uma mensagem 
+ * sobre detalhes dos erros no corpo.
+ * 
+ * */
+
 @ControllerAdvice
 public class ControllerExceptionHandler {	
 	

@@ -14,8 +14,8 @@ import com.alissondev.nuinf.repository.TelefoneRepository;
 import com.alissondev.nuinf.services.exceptions.PessoaNaoEncontradaException;
 
 @Service
-public class PessoaService {
-
+public class PessoaService {	
+		
 	@Autowired
 	private PessoaRepository pessoasRepository;
 	
@@ -36,6 +36,26 @@ public class PessoaService {
 		return pessoa;
 	}
 	
+	public List<Pessoa> buscarPeloNome(String nome) {
+		List<Pessoa> pessoa = pessoasRepository.findByNome(nome);
+		
+		if (pessoa.isEmpty()) {
+			throw new PessoaNaoEncontradaException("Pessoa não encontrada.");
+		}
+		
+		return pessoa;
+	}
+	
+	public Pessoa buscarPeloCpf(String cpf) {
+		Pessoa pessoa = pessoasRepository.findByCpf(cpf);
+		
+		if (pessoa == null) {
+			throw new PessoaNaoEncontradaException("Pessoa não encontrada.");
+		}
+		
+		return pessoa;
+	}
+		
 	public Pessoa salvar(Pessoa pessoa) {
 		pessoa.setId(null);
 		return pessoasRepository.save(pessoa);
@@ -50,9 +70,9 @@ public class PessoaService {
 		}		
 	}
 	
-	public void atualizar(Pessoa pessoa) {
+	public Pessoa atualizar(Pessoa pessoa) {
 		verificarExistencia(pessoa);
-		pessoasRepository.save(pessoa);
+		return pessoasRepository.save(pessoa);		
 	}
 	
 	private void verificarExistencia(Pessoa pessoa) {

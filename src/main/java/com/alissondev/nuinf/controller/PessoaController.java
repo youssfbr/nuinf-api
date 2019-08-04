@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.alissondev.nuinf.entities.Pessoa;
 import com.alissondev.nuinf.entities.Telefone;
 import com.alissondev.nuinf.services.PessoaService;
-
+@CrossOrigin("*")
 @RestController
 @RequestMapping("nuinf/pessoas")
 public class PessoaController {
@@ -43,14 +44,26 @@ public class PessoaController {
 		return ResponseEntity.ok(pessoa.get());
 	}
 	
+	@GetMapping("/nome/{nome}")
+	public List<Pessoa> buscaPessoaPeloNome(@PathVariable("nome") String nome) {
+		List<Pessoa> pessoa = pessoaService.buscarPeloNome(nome);	   
+		return pessoa;
+	}
+	
+	@GetMapping("/cpf/{cpf}")
+	public Pessoa buscaPessoaPeloCPF(@PathVariable("cpf") String cpf) {
+		Pessoa pessoa = pessoaService.buscarPeloCpf(cpf);	   
+		return pessoa;
+	}
+	
 	@PostMapping	
-	public ResponseEntity<Void> salvar(@Valid @RequestBody Pessoa pessoa) {
+	public ResponseEntity<Pessoa> salvar(@Valid @RequestBody Pessoa pessoa) {
 		pessoa = pessoaService.salvar(pessoa);
 		
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
 				.path("/{id}").buildAndExpand(pessoa.getId()).toUri();
 		
-		return ResponseEntity.created(uri).build() ;
+		return ResponseEntity.created(uri).body(pessoa) ;
 	}
 	
 	@DeleteMapping("/{id}")
@@ -59,19 +72,19 @@ public class PessoaController {
 		
 		return ResponseEntity.noContent().build();
 	}
-	
+		
 	@PutMapping("/{id}")
-	public ResponseEntity<Void> atualizar(@RequestBody Pessoa pessoa, @PathVariable("id") Long id) {
+	public ResponseEntity<Pessoa> atualizar(@RequestBody Pessoa pessoa, @PathVariable("id") Long id) {
 		
 		pessoa.setId(id); // Garante que o que está está sendo atualizado é o que está vindo na URI.
-		pessoaService.atualizar(pessoa);		
-		
-		return ResponseEntity.noContent().build();
+		pessoa = pessoaService.atualizar(pessoa);	
+
+		return ResponseEntity.status(HttpStatus.OK).body(pessoa);	
 	}
-	
+		
 	//Salva telefone
 	@PostMapping("/{id}/telefones")	
-	public ResponseEntity<Void> adicionaTelefone(@Valid @PathVariable("id") Long pessoaId, @RequestBody Telefone telefone) {
+	public ResponseEntity<Void> adicionarTelefone(@Valid @PathVariable("id") Long pessoaId, @RequestBody Telefone telefone) {
 		
 		pessoaService.salvarTelefone(pessoaId, telefone);
 		

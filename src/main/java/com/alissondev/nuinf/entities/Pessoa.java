@@ -1,9 +1,11 @@
 package com.alissondev.nuinf.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -45,8 +47,8 @@ public class Pessoa implements Serializable {
 	private String email;
 	
 	@JsonInclude(Include.NON_EMPTY)
-	@OneToMany(mappedBy = "pessoa") // Relacionamento (1 Pessoa pode ter vários telefones)
-	private List<Telefone> telefones;
+	@OneToMany(mappedBy = "pessoa", cascade = CascadeType.REMOVE) // Relacionamento (1 Pessoa pode ter vários telefones)
+	private List<Telefone> telefones = new ArrayList<>();
 	
 	public Long getId() {
 		return id;
@@ -81,9 +83,18 @@ public class Pessoa implements Serializable {
 	public List<Telefone> getTelefones() {
 		return telefones;
 	}
-	public void setTelefones(List<Telefone> telefones) {
+	/*public void setTelefones(List<Telefone> telefones) {
 		this.telefones = telefones;
+	}*/
+	
+	public void adicionarTelefone(Telefone telefone){
+	    telefones.add(telefone);
 	}
+
+	public void removerTelefone(Telefone telefone){
+	    telefones.remove(telefone);
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -106,5 +117,12 @@ public class Pessoa implements Serializable {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+	@Override
+	public String toString() {
+		return "Pessoa [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", dataNascimento=" + dataNascimento
+				+ ", email=" + email + ", telefones=" + telefones + "]";
 	}		
+	
+	
 }

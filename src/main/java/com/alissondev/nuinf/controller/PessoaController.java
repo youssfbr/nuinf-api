@@ -42,19 +42,23 @@ public class PessoaController {
 		Optional<Pessoa> pessoa = pessoaService.buscar(id);		
 		
 		return ResponseEntity.ok(pessoa.get());
-	}
+	}		
 	
-	@GetMapping("/nome/{nome}")
-	public List<Pessoa> buscaPessoaPeloNome(@PathVariable("nome") String nome) {
+	@GetMapping("/nome/{nome}")	
+	public List<Pessoa> buscaPessoaPeloNomePV(@PathVariable("nome") String nome) {
 		List<Pessoa> pessoa = pessoaService.buscarPeloNome(nome);	   
 		return pessoa;
 	}
 	
+	
+	
 	@GetMapping("/cpf/{cpf}")
-	public Pessoa buscaPessoaPeloCPF(@PathVariable("cpf") String cpf) {
+	public Pessoa buscaPessoaPeloCpfPV(@PathVariable("cpf") String cpf) {
 		Pessoa pessoa = pessoaService.buscarPeloCpf(cpf);	   
 		return pessoa;
 	}
+
+	
 	
 	@PostMapping	
 	public ResponseEntity<Pessoa> salvar(@Valid @RequestBody Pessoa pessoa) {
@@ -99,5 +103,10 @@ public class PessoaController {
 		List<Telefone> telefones = pessoaService.listarTelefones(PessoaId);
 		
 		return ResponseEntity.status(HttpStatus.OK).body(telefones);
+	}
+	
+	@DeleteMapping("/{id}/telefones")
+	public void deletarTelefones(@PathVariable("id") Long pessoaId) {
+		pessoaService.deletarTelefones(pessoaId);		
 	}
 }

@@ -58,9 +58,11 @@ public class PessoaService {
 		
 	public Pessoa salvar(Pessoa pessoa) {
 		pessoa.setId(null);
-		return pessoasRepository.save(pessoa);
+		
+		return pessoasRepository.save(pessoa);		 
 	}
 	
+		
 	public void deletar(Long id) {
 		try {
 			pessoasRepository.deleteById(id);	
@@ -91,5 +93,9 @@ public class PessoaService {
 		Pessoa pessoa = buscar(telefoneId).get();
 		
 		return pessoa.getTelefones();
+	}	
+	
+	public void deletarTelefones(Long pessoaId) {			
+		System.out.println(pessoaId);		
 	}
 }
